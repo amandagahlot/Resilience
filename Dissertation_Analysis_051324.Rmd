@@ -1361,7 +1361,7 @@ group_by(df_time3, time_injury_ex) %>%
 library("ggpubr")
 ggboxplot(df_time3, x = "time_injury_ex", y = "acsg_retain",
           color = "time_injury_ex", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-          order = c("Early", "Mid", "Late"),
+          order = c("Early", "Mid", "Later"),
           ylab = "Global Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1385,7 +1385,7 @@ ggsave("plot.png", plot, dpi = 300)
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "acsg_retain",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Global Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1415,7 +1415,7 @@ group_by(df_time3, time_injury_ex) %>%
 library("ggpubr")
 ggboxplot(df_time3, x = "time_injury_ex", y = "acss_retain",
           color = "time_injury_ex", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-          order = c("Early", "Mid", "Late"),
+          order = c("Early", "Mid", "Later"),
           ylab = "Social Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1423,7 +1423,7 @@ ggboxplot(df_time3, x = "time_injury_ex", y = "acss_retain",
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "acss_retain",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Social Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1452,7 +1452,7 @@ group_by(df_time3, time_injury_ex) %>%
 library("ggpubr")
 ggboxplot(df_time3, x = "time_injury_ex", y = "acsi_retain",
           color = "time_injury_ex", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-          order = c("Early", "Mid", "Late"),
+          order = c("Early", "Mid", "Later"),
           ylab = "IADL Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1460,7 +1460,7 @@ ggboxplot(df_time3, x = "time_injury_ex", y = "acsi_retain",
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "acsi_retain",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "IADL Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1490,7 +1490,7 @@ group_by(df_time3, time_injury_ex) %>%
 library("ggpubr")
 ggboxplot(df_time3, x = "time_injury_ex", y = "acsl_retain",
           color = "time_injury_ex", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-          order = c("Early", "Mid", "Late"),
+          order = c("Early", "Mid", "Later"),
           ylab = "Leisure Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1498,7 +1498,7 @@ ggboxplot(df_time3, x = "time_injury_ex", y = "acsl_retain",
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "acsl_retain",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Leisure Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1528,7 +1528,7 @@ group_by(df_time3, time_injury_ex) %>%
 library("ggpubr")
 ggboxplot(df_time3, x = "time_injury_ex", y = "acsg_retain",
           color = "time_injury_ex", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-          order = c("Early", "Mid", "Late"),
+          order = c("Early", "Mid", "Later"),
           ylab = "Fitness Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1536,7 +1536,7 @@ ggboxplot(df_time3, x = "time_injury_ex", y = "acsg_retain",
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "acsf_retain",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Fitness Engagement", xlab = "Time Since Injury")
 ```
 
@@ -1566,7 +1566,7 @@ summary(res.aov)
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "frsbe_total",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Self-Regulation", xlab = "Time Since Injury")
 ```
 
@@ -1582,7 +1582,7 @@ summary(res.aov)
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "phys_health_index",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Physical Health", xlab = "Time Since Injury")
 ```
 
@@ -1614,7 +1614,7 @@ summary(res.aov)
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "tbiqol_genconcern_tscore",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "Physical Health", xlab = "Time Since Injury")
 ```
 
@@ -1631,7 +1631,7 @@ summary(res.aov)
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "spstotal",
        add = c("mean_se", "jitter"),
-       order = c("Early", "Mid", "Late"),
+       order = c("Early", "Mid", "Later"),
        ylab = "spstotal", xlab = "Time Since Injury")
 ```
 
