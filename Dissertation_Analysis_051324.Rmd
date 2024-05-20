@@ -434,7 +434,7 @@ print(mean_sd_acs)
 ## All variables
 Correlation of all variables of interest with TBI QOL subscores. While too small to read in HTML print out, nice reference during analysis
 
-```{r all variables, fig.width=15,fig.height=15, echo=FALSE, include=TRUE}
+```{r all variables, fig.width=15,fig.height=15, results='asis', echo=FALSE, include=TRUE}
 library(ggplot2)
 library(reshape2)
 library(Hmisc)
@@ -902,16 +902,19 @@ model2 <- lm (acsf_retain~phys_health_index+tbiqol_genconcern_tscore+tbiqol_anxi
 model3 <-lm (acsf_retain~tbiqol_mobility_tscore+tbiqol_pain_tscore+tbiqol_genconcern_tscore+tbiqol_anxiety_tscore+tbiqol_grief_tscore, data=df)
 model4 <-lm (acsf_retain~phys_health_index+tbiqol_genconcern_tscore+tbiqol_anxiety_tscore+tbiqol_grief_tscore, data=df)
 model5 <- lm (acsf_retain~tbiqol_mobility_tscore+tbiqol_pain_tscore+tbiqol_genconcern_tscore+tbiqol_anxiety_tscore+tbiqol_grief_tscore+tbiqol_stigma_tscore, data=df)
+model6 <- lm (acsf_retain~tbiqol_mobility_tscore+tbiqol_pain_tscore+tbiqol_genconcern_tscore+tbiqol_anxiety_tscore+tbiqol_stigma_tscore+frsbe_total+income, data=df)
+model7 <- lm (acsf_retain~phys_health_index+tbiqol_genconcern_tscore+tbiqol_anxiety_tscore+tbiqol_stigma_tscore+frsbe_total+income, data=df)
+model8 <- lm (acsf_retain~phys_health_index+tbiqol_genconcern_tscore+tbiqol_anxiety_tscore+tbiqol_stigma_tscore+income, data=df)
 
-models <- list (model1, model2, model3, model4, model5)
+models <- list (model1, model2, model3, model4, model5, model6, model7, model8)
 
-mod.names <- c('model1', 'model2', 'model3', 'model4', 'model5')
+mod.names <- c('model1', 'model2', 'model3', 'model4', 'model5', 'model6', 'model7', 'model8')
 
 aictab(cand.set = models, modnames = mod.names)
 ```
 
 ```{r selected model fitness, echo=FALSE, include=TRUE}
-summary(model2)
+summary(model8)
 ```
 ## RQ1b
 ### Moderation 
@@ -1554,7 +1557,53 @@ summary(model_timeinjury_ex)
 ## Impact on Predictive Variables
 This is exploratory and post hoc analysis- likely unable to report to avoid p-hacking, more for information gathering
 
-###FrSBe
+### Correlations
+
+```{r corr time injury, echo=FALSE, results='asis', fig.width=15,fig.height=15, include=TRUE}
+library(ggplot2)
+library(reshape2)
+library(Hmisc)
+
+time_variables <- c('time_injury', 'acsg_retain', 'acss_retain', 'acsi_retain', 'acsl_retain', 'acsf_retain', 'phys_health_index', 'emo_health_index', 'tbiqol_genconcern_tscore', 'spstotal', 'frsbe_total')
+
+time_variables <- intersect(time_variables, colnames(df))  # Ensure selected variables are in the dataframe
+
+time_variables_df <- df[, time_variables]
+
+cor_matrix <- rcorr(as.matrix(time_variables_df),type = "spearman")$r
+cor_matrix[upper.tri(cor_matrix)] <- NA
+p_matrix <- rcorr(as.matrix(time_variables_df),type = "spearman")$P
+p_matrix[is.na(p_matrix)]=.0000001
+p_matrix[upper.tri(p_matrix)] <- NA
+
+# Create a heatmap using ggplot2
+ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(value,2)), vjust = 1, size = 6) +  # Adjust size here
+  geom_text(aes(label = psig), vjust = .25, size = 6) +  # Adjust size here
+  scale_fill_gradient2(low = "purple", mid = "white", high = "orange", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.text.y = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.title = element_text(size = 14),
+        axis.ticks = element_line(size = 1)) +
+  labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
+  xlab("") +
+  ylab("") +
+  ggtitle("Correlation Matrix Personal Protective Factors Time Since Injury")
+
+ggsave("corr_matrix_time.png", plot, width = 15, height = 15)
+
+```
+
+```{rsaveplot, include=FALSE, echo=FALSE}
+
+```
+
+
+### Self Regulation
 
 ```{r anova self-regulation, echo=FALSE, include=TRUE}
 res.aov <- aov(frsbe_total~time_injury_ex, data=df_time3)
