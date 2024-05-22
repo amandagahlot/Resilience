@@ -1,7 +1,7 @@
 ---
 title: "The Role of Self-Regulation on Resiliency after TBI"
 author: "Amanda Gahlot"
-date: "5_13_24"
+date: "5_21_24"
 output:
   html_document:
     toc: true
@@ -329,7 +329,7 @@ PPF_table <- df_demo %>%
     by = severity,
     type = list(
       c(phys_health_index, emo_health_index, tbiqol_genconcern_tscore, bfi_extraversion, bfi_agreeable, bfi_consciousness, bfi_neuroticism, bfi_openness) ~ "continuous",
-      c(severity) ~ "categorical"
+      c(severity, income) ~ "categorical"
     ),
     statistic = list(all_continuous() ~ "{mean} ({sd})", all_categorical() ~ "{n} ({p}%)"),
     label = list(
@@ -358,6 +358,14 @@ PPF_table <- df_demo %>%
   add_n()
 
 print(PPF_table)   
+```
+
+```{r subset severity openness, echo=FALSE, include=TRUE}
+#significant difference in ACSS between groups. t-test for t value
+df_mod <- subset(df, severity == 2)
+df_severe <- subset(df, severity == 3)
+ttest_openness <- t.test(df_mod$bfi_openness, df_severe$bfi_openness)
+print(ttest_openness)
 ```
 
 
@@ -464,21 +472,24 @@ melted_cor$psig[melted_cor$p<.001]="***"
 # Create a heatmap using ggplot2
 ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   geom_tile(color = "white") +
-  geom_text(aes(label = round(value, 2)), vjust = 1, size = 2) +
-  geom_text(aes(label = psig), vjust = .25,size=5) +
+  geom_text(aes(label = round(value,2)), vjust = 1, size = 2) +  # Adjust size here
+  geom_text(aes(label = psig), vjust = .25, size = 6) +  # Adjust size here
   scale_fill_gradient2(low = "purple", mid = "white", high = "orange", 
                        midpoint = 0, limit = c(-1,1), space = "Lab",
-                       name="Correlation") +
+                       name = "Correlation") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1))+
-  labs(caption = "<.05 = *, <.01 = **, <.001 = ***")+
-  xlab("")+
-  ylab("")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10),  # Adjust size here
+        axis.text.y = element_text(angle = 45, hjust = 1, size = 10),  # Adjust size here
+        axis.title = element_text(size = 14),
+        axis.ticks = element_line(size = 1)) +
+  labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
+  xlab("") +
+  ylab("") +
   ggtitle("Correlation Matrix all variables")
 
 ```
 
+This is pretty hard to read, so the following matrices break it down into smaller parts
 
 ```{r rename variables, results='asis', echo=FALSE, include=FALSE}
 #Rename Variables in new dataset
@@ -567,17 +578,19 @@ melted_cor$psig[melted_cor$p<.001]="***"
 # Create a heatmap using ggplot2
 ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   geom_tile(color = "white") +
-  geom_text(aes(label = round(value,2)), vjust = 1) +
-  geom_text(aes(label = psig), vjust = .25,size=5) +
+  geom_text(aes(label = round(value,2)), vjust = 1, size = 6) +  # Adjust size here
+  geom_text(aes(label = psig), vjust = .25, size = 6) +  # Adjust size here
   scale_fill_gradient2(low = "purple", mid = "white", high = "orange", 
                        midpoint = 0, limit = c(-1,1), space = "Lab",
-                       name="Correlation") +
+                       name = "Correlation") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1))+
-  labs(caption = "<.05 = *, <.01 = **, <.001 = ***")+
-  xlab("")+
-  ylab("")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.text.y = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.title = element_text(size = 14),
+        axis.ticks = element_line(size = 1)) +
+  labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
+  xlab("") +
+  ylab("") +
   ggtitle("Correlation Matrix Personal Protective Factors")
 
 
@@ -623,20 +636,19 @@ melted_cor$psig[melted_cor$p < .001] <- "***"
 # Create a heatmap using ggplot2
 ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   geom_tile(color = "white") +
-  geom_text(aes(label = round(value, 2)), vjust = 1, size=5, family = "Times New Roman") +
-  geom_text(aes(label = psig), vjust = .25, size = 5, family = "Times New Roman") +
+  geom_text(aes(label = round(value,2)), vjust = 1, size = 6) +  # Adjust size here
+  geom_text(aes(label = psig), vjust = .25, size = 6) +  # Adjust size here
   scale_fill_gradient2(low = "purple", mid = "white", high = "orange", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       midpoint = 0, limit = c(-1,1), space = "Lab",
                        name = "Correlation") +
-  theme_minimal(base_family = "Times New Roman") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, family = "Times New Roman"),
-        axis.text.y = element_text(angle = 45, hjust = 1, family = "Times New Roman"),
-        legend.position = "bottom",
-        legend.justification = "right",
-        legend.box = "horizontal") +
-  labs(caption = "<.05 = *, <.01 = **, <.001 = ***",
-       x = "",
-       y = "") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.text.y = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.title = element_text(size = 14),
+        axis.ticks = element_line(size = 1)) +
+  labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
+  xlab("") +
+  ylab("") +
   ggtitle("Correlation Matrix Personal Protective Factors with ACS Variables") +
   guides(fill = guide_colorbar(title.position = "right"))
 
@@ -677,19 +689,20 @@ melted_cor$psig[melted_cor$p < .001] <- "***"
 # Create a heatmap using ggplot2
 ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   geom_tile(color = "white") +
-  geom_text(aes(label = round(value,2)), vjust = 1) +
-  geom_text(aes(label = psig), vjust = .25,size=5) +
+  geom_text(aes(label = round(value,2)), vjust = 1, size = 6) +  # Adjust size here
+  geom_text(aes(label = psig), vjust = .25, size = 6) +  # Adjust size here
   scale_fill_gradient2(low = "purple", mid = "white", high = "orange", 
                        midpoint = 0, limit = c(-1,1), space = "Lab",
-                       name="Correlation") +
+                       name = "Correlation") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1))+
-  labs(caption = "<.05 = *, <.01 = **, <.001 = ***")+
-  xlab("")+
-  ylab("")+
-  ggtitle("Correlation Matrix Personal Protective Factors with ACS Variables") +
-  guides(fill = guide_colorbar(title.position = "right"))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.text.y = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.title = element_text(size = 14),
+        axis.ticks = element_line(size = 1)) +
+  labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
+  xlab("") +
+  ylab("") +
+  ggtitle("Correlation Matrix Personal Protective Factors with ACS Variables")
 
 ```
 
@@ -700,7 +713,7 @@ ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
 
 ## FrSBe and TBI-QOL
 
-TBI QOL subscales with the FrSBe
+TBI QOL subscales with the FrSBe. I think this could be really interested as a future paper given how some subscales of the TBI QOL overlap with FrSBe (Exec functioning, anger, dyscontrol)
 
 
 ```{r qol and frsbe corr, fig.width=10,fig.height=8, echo=FALSE, include=TRUE}
@@ -867,7 +880,7 @@ aictab(cand.set = models, modnames = mod.names)
 
 
 
-```{r model included acsi, echo=FALSE, include=FALSE}
+```{r model included acsi, echo=FALSE, include=TRUE}
 summary(model6)
 ```
 
@@ -944,9 +957,9 @@ There was no moderating effect of apathy on any of the predictors.
 Here we look at mediation effect of the total FrSBe scores on the personal and environmental factors used in the post hoc model (mobility, general cog functioning, anxiety, depression, and social support)
 
 How to read: 
-ACME = indirect effect
-ADE = direct effect
-ACME + ADE = total effect
+ACME = indirect effect. 
+ADE = direct effect. 
+ACME + ADE = total effect. 
 
 
 ```{r load library mediation, echo=FALSE, include=FALSE}
@@ -1142,7 +1155,157 @@ plot<- plotmat (M, pos=c(1,2),
                 box.type = "rect", box.size = 0.12, box.prop=0.5,  curve=0)
 ```
 
+### Post Hoc Mediation 
+
+In this set of mediation analysis, we look specifically at apathy as a mediator for the ACS social re-engagement outcome
+
+
+```{r mediation acss apathy dep, echo=FALSE, include=TRUE}
+# Initial Model
+model1 <- lm(acss_retain ~ tbiqol_depression_tscore, df) # Y ~ X, DV predicted by IV - no mediation considered - total effect
+summary(model1)
+
+# Mediation paths
+medmodel1 <- lm(frsbe_apathy ~ tbiqol_depression_tscore, df) # M ~ X, mediator predicted by X
+outputmodel1 <- lm(acss_retain ~ tbiqol_depression_tscore + frsbe_apathy, df) # Y ~ X + M, DV predicted by mediator, adjusting for IV
+
+summary(medmodel1)
+summary(outputmodel1)
+
+
+# Mediation test
+mediation <- mediate(medmodel1, # Mediator model
+                    outputmodel1, # Outcome model
+                    boot = T, # Ask for bootstrapped confidence intervals
+                    treat="tbiqol_depression_tscore", # Name of the x variable
+                    mediator="frsbe_apathy" # Name of the m variable
+                    )
+# if you don't want bootstrap, just delete 'sims' line and set boot = F
+
+summary(mediation)
+plot(mediation)
+```
+```{r path mediation dep, echo=FALSE, include=TRUE}
+
+patha <- paste(round(as.numeric(coef(medmodel1)[2]),2))
+patha
+pathb <- paste(round(as.numeric(coef(outputmodel1)[3]),2))
+pathb
+
+# indirect
+direct <- paste(round(mediation$z.avg,2)) # direct
+total <- paste(round((mediation$d.avg + mediation$z.avg),2)) # total
+
+pathc <- paste(direct,"(",total,")")
+
+data <- c(0, patha, 0,
+          0, 0, 0, 
+          pathb, pathc, 0) # order: top = effect of IV on mediator; bottom left = effect of mediator on DV; bottom middle = direct effect (total effect)
+M<- matrix (nrow=3, ncol=3, byrow = TRUE, data=data)
+plot<- plotmat (M, pos=c(1,2), 
+                name= c("Self-regulation: Apathy","Depression", "ACS Social"), # order: Mediator, IV, DV 
+                box.type = "rect", box.size = 0.12, box.prop=0.5,  curve=0)
+
+```
+```{r mediation apathy fatigue, echo=FALSE, include=TRUE}
+# Initial Model
+model1 <- lm(acss_retain ~ tbiqol_fatigue_tscore, df) # Y ~ X, DV predicted by IV - no mediation considered - total effect
+summary(model1)
+
+# Mediation paths
+medmodel1 <- lm(frsbe_apathy ~ tbiqol_fatigue_tscore, df) # M ~ X, mediator predicted by X
+outputmodel1 <- lm(acss_retain ~ tbiqol_fatigue_tscore + frsbe_apathy, df) # Y ~ X + M, DV predicted by mediator, adjusting for IV
+
+summary(medmodel1)
+summary(outputmodel1)
+
+
+# Mediation test
+mediation <- mediate(medmodel1, # Mediator model
+                    outputmodel1, # Outcome model
+                    boot = T, # Ask for bootstrapped confidence intervals
+                    treat="tbiqol_fatigue_tscore", # Name of the x variable
+                    mediator="frsbe_apathy" # Name of the m variable
+                    )
+# if you don't want bootstrap, just delete 'sims' line and set boot = F
+
+summary(mediation)
+plot(mediation)
+```
+```{r path mediation fatigue, echo=FALSE, include=TRUE}
+
+patha <- paste(round(as.numeric(coef(medmodel1)[2]),2))
+patha
+pathb <- paste(round(as.numeric(coef(outputmodel1)[3]),2))
+pathb
+
+# indirect
+direct <- paste(round(mediation$z.avg,2)) # direct
+total <- paste(round((mediation$d.avg + mediation$z.avg),2)) # total
+
+pathc <- paste(direct,"(",total,")")
+
+data <- c(0, patha, 0,
+          0, 0, 0, 
+          pathb, pathc, 0) # order: top = effect of IV on mediator; bottom left = effect of mediator on DV; bottom middle = direct effect (total effect)
+M<- matrix (nrow=3, ncol=3, byrow = TRUE, data=data)
+plot<- plotmat (M, pos=c(1,2), 
+                name= c("Self-regulation: Apathy","Fatigue", "ACS Social"), # order: Mediator, IV, DV 
+                box.type = "rect", box.size = 0.12, box.prop=0.5,  curve=0)
+
+```
+
+```{r mediation apathy gencog, echo=FALSE, include=TRUE}
+# Initial Model
+model1 <- lm(acss_retain ~ tbiqol_genconcern_tscore, df) # Y ~ X, DV predicted by IV - no mediation considered - total effect
+summary(model1)
+
+# Mediation paths
+medmodel1 <- lm(frsbe_apathy ~ tbiqol_genconcern_tscore, df) # M ~ X, mediator predicted by X
+outputmodel1 <- lm(acss_retain ~ tbiqol_genconcern_tscore + frsbe_apathy, df) # Y ~ X + M, DV predicted by mediator, adjusting for IV
+
+summary(medmodel1)
+summary(outputmodel1)
+
+
+# Mediation test
+mediation <- mediate(medmodel1, # Mediator model
+                    outputmodel1, # Outcome model
+                    boot = T, # Ask for bootstrapped confidence intervals
+                    treat="tbiqol_genconcern_tscore", # Name of the x variable
+                    mediator="frsbe_apathy" # Name of the m variable
+                    )
+# if you don't want bootstrap, just delete 'sims' line and set boot = F
+
+summary(mediation)
+plot(mediation)
+```
+
+```{r path mediation gencog, echo=FALSE, include=TRUE}
+
+patha <- paste(round(as.numeric(coef(medmodel1)[2]),2))
+patha
+pathb <- paste(round(as.numeric(coef(outputmodel1)[3]),2))
+pathb
+
+# indirect
+direct <- paste(round(mediation$z.avg,2)) # direct
+total <- paste(round((mediation$d.avg + mediation$z.avg),2)) # total
+
+pathc <- paste(direct,"(",total,")")
+
+data <- c(0, patha, 0,
+          0, 0, 0, 
+          pathb, pathc, 0) # order: top = effect of IV on mediator; bottom left = effect of mediator on DV; bottom middle = direct effect (total effect)
+M<- matrix (nrow=3, ncol=3, byrow = TRUE, data=data)
+plot<- plotmat (M, pos=c(1,2), 
+                name= c("Self-regulation: Apathy","General cognition", "ACS Social"), # order: Mediator, IV, DV 
+                box.type = "rect", box.size = 0.12, box.prop=0.5,  curve=0)
+
+```
+
 # RQ2: Time Since Injury
+
 2.	How does time since injury influence resiliency?
 a.	Is time after injury associated with an individual’s ability to re-engage in meaningful activities?
 b.	To what extent do the relationships between protective factors and self-regulatory processes with resiliency-related outcomes change with time since sustaining TBI?
@@ -1158,6 +1321,13 @@ selected_vars_acs <- c("time_injury")
 summary_table <- do.call(rbind, lapply(df[selected_vars_acs], function(x) round(summary(x), 2)))
 
 print(summary_table)
+```
+```{r mean sd of time since injury, echo=FALSE, include=TRUE}
+mean_tsi <- mean(df$time_injury, na.rm = TRUE)
+std_tsi <- sd(df$time_injury, na.rm = TRUE)
+print(mean_tsi)
+print(std_tsi)
+
 ```
 
 
@@ -1193,20 +1363,19 @@ melted_cor$psig[melted_cor$p < .001] <- "***"
 # Create a heatmap using ggplot2
 ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   geom_tile(color = "white") +
-  geom_text(aes(label = round(value, 2)), vjust = 1, family = "Times New Roman") +
-  geom_text(aes(label = psig), vjust = 0.25, size = 5, family = "Times New Roman") +
+  geom_text(aes(label = round(value,2)), vjust = 1, size = 6) +  # Adjust size here
+  geom_text(aes(label = psig), vjust = .25, size = 6) +  # Adjust size here
   scale_fill_gradient2(low = "purple", mid = "white", high = "orange", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       midpoint = 0, limit = c(-1,1), space = "Lab",
                        name = "Correlation") +
-  theme_minimal(base_family = "Times New Roman") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, family = "Times New Roman"),
-        axis.text.y = element_text(angle = 45, hjust = 1, family = "Times New Roman"),
-        legend.position = "bottom",
-        legend.justification = "right",
-        legend.box = "horizontal") +
-  labs(caption = "<.05 = *, <.01 = **, <.001 = ***",
-       x = "",
-       y = "") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.text.y = element_text(angle = 45, hjust = 1, size = 20),  # Adjust size here
+        axis.title = element_text(size = 14),
+        axis.ticks = element_line(size = 1)) +
+  labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
+  xlab("") +
+  ylab("") +
   ggtitle("Correlation Matrix Personal Protective Factors with ACS Variables") +
   guides(fill = guide_colorbar(title.position = "right"))
 
@@ -1368,7 +1537,7 @@ ggboxplot(df_time3, x = "time_injury_ex", y = "acsg_retain",
           ylab = "Global Engagement", xlab = "Time Since Injury")
 ```
 
-```{r vis global 3 to save, results='asis', echo=FALSE, include=FALSE}
+```{r vis global 3 to save, results='asis', echo=FALSE, include=TRUE}
 library("ggpubr")
 
 # Set global font to Times New Roman
@@ -1384,6 +1553,7 @@ plot <- ggline(df_time3, x = "time_injury_ex", y = "acsg_retain",
 # Save the plot as a PNG file with DPI=300
 ggsave("plot.png", plot, dpi = 300)
 ```
+
 ```{r vis global 3 again, echo=FALSE, include=TRUE}
 library("ggpubr")
 ggline(df_time3, x = "time_injury_ex", y = "acsg_retain",
@@ -1559,22 +1729,36 @@ This is exploratory and post hoc analysis- likely unable to report to avoid p-ha
 
 ### Correlations
 
-```{r corr time injury, echo=FALSE, results='asis', fig.width=15,fig.height=15, include=TRUE}
+```{r timeinjury predictive variables, fig.width=15,fig.height=15, echo=FALSE, include=TRUE}
 library(ggplot2)
 library(reshape2)
 library(Hmisc)
 
-time_variables <- c('time_injury', 'acsg_retain', 'acss_retain', 'acsi_retain', 'acsl_retain', 'acsf_retain', 'phys_health_index', 'emo_health_index', 'tbiqol_genconcern_tscore', 'spstotal', 'frsbe_total')
+# Define QOL_PPF_variables
+Time_PPF_variables <- c("TimeSinceInjury", "Global", "IADL", "Leisure", "Fitness", "Social", "PhysicalHealth", "GeneralCognition", "EmotionalHealth", "Extraversion", "Agreeable", "Consciousness", "Neuroticism", "Openness", "income", "MaritalStatus", "SocialSupport", "Apathy", "Disinhibition", "ExecFunc", "Total")
 
-time_variables <- intersect(time_variables, colnames(df))  # Ensure selected variables are in the dataframe
+# Ensure selected variables are in the dataframe
+Time_PPF_variables <- intersect(Time_PPF_variables, colnames(df2))
 
-time_variables_df <- df[, time_variables]
+# Extract relevant data
+Time_PPF_df2 <- df2[, Time_PPF_variables]
 
-cor_matrix <- rcorr(as.matrix(time_variables_df),type = "spearman")$r
+# Calculate correlation matrix
+cor_matrix <- rcorr(as.matrix(Time_PPF_df2), type = "spearman")$r
 cor_matrix[upper.tri(cor_matrix)] <- NA
-p_matrix <- rcorr(as.matrix(time_variables_df),type = "spearman")$P
-p_matrix[is.na(p_matrix)]=.0000001
+p_matrix <- rcorr(as.matrix(Time_PPF_df2), type = "spearman")$P
+p_matrix[is.na(p_matrix)] <- .0000001
 p_matrix[upper.tri(p_matrix)] <- NA
+
+# Melt the correlation matrix for ggplot
+melted_cor <- melt(cor_matrix, na.rm = TRUE)
+melted_p <- melt(p_matrix, na.rm = TRUE)
+
+melted_cor$p <- melted_p$value
+melted_cor$psig <- ""
+melted_cor$psig[melted_cor$p < .05] <- "*"
+melted_cor$psig[melted_cor$p < .01] <- "**"
+melted_cor$psig[melted_cor$p < .001] <- "***"
 
 # Create a heatmap using ggplot2
 ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
@@ -1592,9 +1776,8 @@ ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   labs(caption = "<.05 = *, <.01 = **, <.001 = ***") +
   xlab("") +
   ylab("") +
-  ggtitle("Correlation Matrix Personal Protective Factors Time Since Injury")
-
-ggsave("corr_matrix_time.png", plot, width = 15, height = 15)
+  ggtitle("Correlation Matrix Personal Protective Factors with ACS Variables") +
+  guides(fill = guide_colorbar(title.position = "right"))
 
 ```
 
